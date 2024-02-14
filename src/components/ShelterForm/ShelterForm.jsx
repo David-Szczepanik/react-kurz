@@ -8,19 +8,55 @@ function ShelterForm({ onAdd }) {
     pills: "",
   });
 
-  const [disable, setDisable] = useState(true);
+  //const [disable, setDisable] = useState(true);
 
   const handleStorage = (event) => {
-    setTempStorage({ ...tempStorage, [event.target.name]: event.target.value });
+    //setTempStorage({ ...tempStorage, [event.target.name]: event.target.value });
+    const source = event.target.name;
+    switch (source) {
+      case "food": {
+        //setTempStorage({ ...tempStorage, food: event.target.value });
+        //{...tempStorage} === {food:tempStorage.food, vaccine:tempStorage.vaccine, pills:tempStorage.pills}
+        setTempStorage({
+          food: event.target.value,
+          vaccine: tempStorage.vaccine,
+          pills: tempStorage.pills,
+        });
+        break;
+      }
+      case "vaccine": {
+        setTempStorage({
+          food: tempStorage.food,
+          vaccine: event.target.value,
+          pills: tempStorage.pills,
+        });
+        break;
+      }
+      case "pills": {
+        setTempStorage({
+          food: tempStorage.food,
+          vaccine: tempStorage.vaccine,
+          pills: event.target.value,
+        });
+        break;
+      }
+      default: {
+        break;
+      }
+    }
   };
 
   useEffect(() => {
-    const temp =
-      (tempStorage.food === "" || parseInt(tempStorage.food) === 0) &&
-      (tempStorage.vaccine === "" || parseInt(tempStorage.vaccine) === 0) &&
-      (tempStorage.pills === "" || parseInt(tempStorage.pills) === 0);
-    setDisable(temp);
+    console.log(tempStorage);
   }, [tempStorage]);
+
+  // useEffect(() => {
+  //   const temp =
+  //     (tempStorage.food === "" || parseInt(tempStorage.food) === 0) &&
+  //     (tempStorage.vaccine === "" || parseInt(tempStorage.vaccine) === 0) &&
+  //     (tempStorage.pills === "" || parseInt(tempStorage.pills) === 0);
+  //   setDisable(temp);
+  // }, [tempStorage]);
 
   const handleClick = () => {
     const storageToSend = {
@@ -62,9 +98,8 @@ function ShelterForm({ onAdd }) {
         value={tempStorage.pills}
         onChange={handleStorage}
       />
-      <button disabled={disable} onClick={handleClick}>
-        Doplnit zásoby
-      </button>
+      {/* <button disabled={disable} onClick={handleClick}> */}
+      <button onClick={handleClick}>Doplnit zásoby</button>
     </div>
   );
 }

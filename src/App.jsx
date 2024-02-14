@@ -28,6 +28,12 @@ function App() {
     pills: 20,
   });
 
+  const dogsRequirements = {
+    food: 5,
+    vaccine: 1,
+    pills: 2,
+  };
+
   const validateData = (dog) => {
     if (dog.age === "" || dog.age < 0 || dog.age > 18) {
       setValid(false);
@@ -47,18 +53,31 @@ function App() {
   };
 
   const handleAdd = () => {
-    setListOfDogs((listOfDogs) => {
-      return [...listOfDogs, newDog];
-    });
-    const newDogId = newDog.id + 1;
-    const updatedDog = {
-      id: newDogId,
-      name: "",
-      breed: "",
-      age: "",
+    const totalRequirements = {
+      food: (listOfDogs.length + 1) * dogsRequirements.food,
+      vaccine: (listOfDogs.length + 1) * dogsRequirements.vaccine,
+      pills: (listOfDogs.length + 1) * dogsRequirements.pills,
     };
-    setNewDog(updatedDog);
-    validateData(updatedDog);
+    if (
+      totalRequirements.food <= shelterStorage.food &&
+      totalRequirements.vaccine <= shelterStorage.vaccine &&
+      totalRequirements.pills <= shelterStorage.pills
+    ) {
+      setListOfDogs((listOfDogs) => {
+        return [...listOfDogs, newDog];
+      });
+      const newDogId = newDog.id + 1;
+      const updatedDog = {
+        id: newDogId,
+        name: "",
+        breed: "",
+        age: "",
+      };
+      setNewDog(updatedDog);
+      validateData(updatedDog);
+    } else {
+      alert("nedostatek zásob pro přidání nového psa");
+    }
   };
 
   const handleDelete = (idToDelete) => {
@@ -80,8 +99,13 @@ function App() {
     }
   };
 
-  const handleAddToStorage = () => {
-    null;
+  const handleAddToStorage = (temp) => {
+    const temporaryStorage = {
+      food: shelterStorage.food + temp.food,
+      vaccine: shelterStorage.vaccine + temp.vaccine,
+      pills: shelterStorage.pills + temp.pills,
+    };
+    setShleterStorage(temporaryStorage);
   };
 
   return (
